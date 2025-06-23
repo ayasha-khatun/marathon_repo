@@ -39,7 +39,14 @@ const router = createBrowserRouter([
           {
             path: "my-apply",
             Component: MyApplyList
+          },
+          { 
+            path: 'my-marathons', 
+            Component: MyMarathons 
           }
+  ]
+}
+
           
         ]
       },
