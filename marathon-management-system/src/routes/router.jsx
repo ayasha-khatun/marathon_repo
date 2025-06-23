@@ -8,6 +8,7 @@ import Register from './../Pages/Auth/Register';
 import AddMarathon from "../Pages/Dashboard/AddMarathon";
 import MarathonDetails from "../Pages/Marathons/MarathonDetails";
 import RegisterMarathon from "../Pages/Marathons/RegisterMarathon";
+import MyApplyList from "../Pages/Dashboard/MyApplyList";
 
 
 const router = createBrowserRouter([
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
             path: "add-marathon",
             Component: AddMarathon
           },
+          {
+            path: "my-apply",
+            Component: MyApplyList
+          }
           
         ]
       },

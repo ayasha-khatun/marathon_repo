@@ -3,6 +3,7 @@ import Banner from './Banner';
 import UpcomingMarathon from './UpcomingMarathon';
 import TipsSection from './TipsSection';
 import HallOfFame from './HallOfFame';
+import Marathons from '../Marathons/Marathons';
 
 const Home = () => {
 
