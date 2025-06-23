@@ -35,9 +35,7 @@ const UpcomingMarathon = () => {
                 <p className="text-sm text-gray-500">
                     Registration: {item.registrationStart} → {item.registrationEnd}
                 </p>
-                <button className="mt-2 px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                    See Details
-                </button>
+                
                 </div>
             ))}
         </div>
