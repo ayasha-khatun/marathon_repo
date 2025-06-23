@@ -9,6 +9,7 @@ import AddMarathon from "../Pages/Dashboard/AddMarathon";
 import MarathonDetails from "../Pages/Marathons/MarathonDetails";
 import RegisterMarathon from "../Pages/Marathons/RegisterMarathon";
 import MyApplyList from "../Pages/Dashboard/MyApplyList";
+import MyMarathons from "../Pages/Dashboard/MyMarathons";
 
 
 const router = createBrowserRouter([
@@ -42,11 +43,8 @@ const router = createBrowserRouter([
           },
           { 
             path: 'my-marathons', 
-            Component: MyMarathons 
+            Component: MyMarathons
           }
-  ]
-}
-
           
         ]
       },
