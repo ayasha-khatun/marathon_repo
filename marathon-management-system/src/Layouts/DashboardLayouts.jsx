@@ -9,16 +9,6 @@ const DashboardLayouts = () => {
       <aside className="col-span-1 bg-white dark:bg-gray-800 p-4 shadow-md">
 
         <nav className="space-y-3 text-gray-700 dark:text-gray-200 text-sm font-medium">
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              isActive
-                ? 'flex items-center gap-2 text-blue-600 font-semibold'
-                : 'flex items-center gap-2 hover:text-blue-500'
-            }
-          >
-            <FiHome /> Dashboard Home
-          </NavLink>
 
           <NavLink
             to="/dashboard/add-marathon"

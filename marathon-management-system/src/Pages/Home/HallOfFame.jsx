@@ -7,19 +7,19 @@ const HallOfFame = () => {
             name: "Arif Hossain",
             time: "2h 12m",
             event: "Dhaka Winter Marathon 2024",
-            image: "https://i.ibb.co/qNbGNgH/winner1.jpg"
+            image: "https://i.ibb.co/BHQ7GjyC/ai-generated-8268599-1280.jpg"
         },
         {
             name: "Nusrat Jahan",
             time: "2h 28m",
             event: "Chittagong Marathon 2024",
-            image: "https://i.ibb.co/4Y3dy1R/winner2.jpg"
+            image: "https://i.ibb.co/FbP8xpSZ/sportswoman-8265224-1280.jpg"
         },
         {
             name: "Sajjad Karim",
             time: "2h 20m",
             event: "Sylhet Hill Run 2024",
-            image: "https://i.ibb.co/GV4Xtq0/winner3.jpg"
+            image: "https://i.ibb.co/60pdrHGW/athletics-4424264-1280.jpg"
         },
     ];
 

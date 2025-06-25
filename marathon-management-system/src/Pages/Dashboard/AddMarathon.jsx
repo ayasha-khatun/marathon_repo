@@ -13,6 +13,7 @@ const AddMarathon = () => {
     distance: '10K',
     image: '',
     description: '',
+    creatorEmail: user.email,
   });
 
   const [regStart, setRegStart] = useState(new Date());
@@ -36,7 +37,7 @@ const AddMarathon = () => {
       marathonStartDate: marathonDate.toISOString().split('T')[0],
       createdAt: new Date(),
       totalRegistration: 0,
-      organizerEmail: user?.email
+      creatorEmail: user?.email
     };
 
     try {
