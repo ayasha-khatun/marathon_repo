@@ -4,6 +4,7 @@ import UpcomingMarathon from './UpcomingMarathon';
 import TipsSection from './TipsSection';
 import HallOfFame from './HallOfFame';
 import Marathons from '../Marathons/Marathons';
+import MarathonCards from './MarathonCards';
 
 const Home = () => {
 
@@ -12,6 +13,7 @@ const Home = () => {
     return (
         <div className='max-w-7xl'>
             <Banner></Banner>
+            <MarathonCards></MarathonCards>
             <UpcomingMarathon marathonPromise={marathonPromise}></UpcomingMarathon>
             <TipsSection></TipsSection>
             <HallOfFame></HallOfFame>
