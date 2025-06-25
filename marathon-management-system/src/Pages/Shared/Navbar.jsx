@@ -1,8 +1,8 @@
 import { Link, NavLink } from "react-router"; 
 import { useContext, useState } from "react";
 import { FiLogIn, FiLogOut, FiMenu, FiX } from "react-icons/fi";
-import ThemeToggle from "./ThemeToggle";
 import { AuthContext } from './../../Contexts/AuthContext/AuthContext';
+import logo from '../../assets/logo.png'
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -28,14 +28,13 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo & Title */}
         <Link to="/" className="flex items-center space-x-2">
-          <img src="/logo.png" alt="Logo" className="h-8" />
+          <img src={logo} alt="Logo" className="h-10 bg-red" />
           <span className="text-xl font-bold text-gray-800 dark:text-white">MarathonPro</span>
         </Link>
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex items-center space-x-6 font-medium text-gray-700 dark:text-gray-200">
           {navLinks}
-          <li><ThemeToggle /></li>
 
           {user && (
             <li className="relative group cursor-pointer">
@@ -87,7 +86,6 @@ const Navbar = () => {
         <div className="md:hidden bg-white dark:bg-gray-800 px-4 py-3">
           <ul className="space-y-3 text-gray-700 dark:text-gray-200">
             {navLinks}
-            <li><ThemeToggle /></li>
 
             {user ? (
               <>
