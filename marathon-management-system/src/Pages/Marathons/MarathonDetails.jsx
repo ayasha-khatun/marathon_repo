@@ -1,60 +1,62 @@
-import { useParams, useNavigate } from 'react-router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
 const MarathonDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [marathon, setMarathon] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch(`http://localhost:3000/marathons/${id}`)
       .then(res => res.json())
-      .then(data => {
-        setMarathon(data);
-        setLoading(false);
-      });
+      .then(data => setMarathon(data));
   }, [id]);
 
-  if (loading) return <div className="text-center py-20">Loading...</div>;
+  if (!marathon) return <div className="text-center py-20">Loading...</div>;
 
-  if (!marathon) return <p className="text-center text-red-500">Marathon not found</p>;
+  // ⏳ Calculate remaining time
+  const startTime = new Date(marathon.marathonStartDate).getTime(); // marathon start
+  const currentTime = Date.now();
+  const remainingSeconds = Math.floor((startTime - currentTime) / 1000);
 
-  const today = new Date();
-  const isRegistrationOpen =
-    new Date(marathon.registrationStart) <= today &&
-    today <= new Date(marathon.registrationEnd);
+  const formatTime = (remaining) => {
+    const days = Math.floor(remaining / (3600 * 24));
+    const hours = Math.floor((remaining % (3600 * 24)) / 3600);
+    const minutes = Math.floor((remaining % 3600) / 60);
+
+    return `${days}d ${hours}h ${minutes}m`;
+  };
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-        <img src={marathon.image} alt={marathon.title} className="w-full h-64 object-cover" />
-        <div className="p-6 space-y-4">
-          <h2 className="text-3xl font-bold">{marathon.title}</h2>
-          <p className="text-gray-600 dark:text-gray-300">📍 {marathon.location}</p>
-          <p className="text-sm text-gray-500">
-            🗓 Registration: {marathon.registrationStart} ➜ {marathon.registrationEnd}
-          </p>
-          <p className="text-sm text-gray-500">🏁 Marathon Date: {marathon.marathonStartDate}</p>
-          <p className="text-sm text-gray-500">🏃 Distance: {marathon.distance}</p>
-          <p className="text-gray-700 dark:text-gray-300">{marathon.description}</p>
-          <p className="text-sm font-semibold text-blue-600">
-            Total Registrations: {marathon.totalRegistration || 0}
-          </p>
+    <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-800 rounded shadow">
+      <h2 className="text-2xl font-bold mb-4">{marathon.title}</h2>
+      <img src={marathon.image} alt={marathon.title} className="rounded mb-4 w-full max-h-96 object-cover" />
+      <p className="text-gray-700 dark:text-gray-300 mb-2"><strong>📍 Location:</strong> {marathon.location}</p>
+      <p className="text-gray-700 dark:text-gray-300 mb-2"><strong>🏃 Distance:</strong> {marathon.runningDistance}</p>
+      <p className="text-gray-700 dark:text-gray-300 mb-2"><strong>🗓️ Starts on:</strong> {marathon.marathonStartDate}</p>
+      <p className="text-gray-700 dark:text-gray-300 mb-4"><strong>📋 Description:</strong> {marathon.description}</p>
+      <p className="text-gray-700 dark:text-gray-300 mb-4"><strong>Total Registrations:</strong> {marathon.totalRegistration}</p>
 
-          {isRegistrationOpen ? (
-            <button
-              onClick={() => navigate(`/register-marathon/${marathon._id}`)}
-              className="btn btn-primary mt-4"
-            >
-              Register Now
-            </button>
-          ) : (
-            <p className="text-red-500 mt-4 font-medium">
-              ⚠️ Registration is closed for this marathon.
-            </p>
-          )}
-        </div>
+      {/* ⏰ Countdown */}
+      <div className="text-center mt-6">
+        <h3 className="text-xl font-semibold mb-2">⏳ Time Left to Start</h3>
+        {remainingSeconds > 0 ? (
+          <CountdownCircleTimer
+            isPlaying
+            duration={remainingSeconds}
+            colors={[['#004777', 0.33], ['#F7B801', 0.33], ['#A30000', 0.33]]}
+            size={180}
+            strokeWidth={12}
+          >
+            {({ remainingTime }) => (
+              <div className="text-lg font-semibold text-gray-700 dark:text-white">
+                {formatTime(remainingTime)}
+              </div>
+            )}
+          </CountdownCircleTimer>
+        ) : (
+          <p className="text-red-500 font-bold">🏁 Marathon has started!</p>
+        )}
       </div>
     </div>
   );
