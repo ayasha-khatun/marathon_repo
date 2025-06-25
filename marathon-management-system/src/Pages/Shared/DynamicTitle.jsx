@@ -1,5 +1,5 @@
 // src/Components/DynamicTitle.jsx
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { useEffect } from 'react';
 
 const DynamicTitle = () => {

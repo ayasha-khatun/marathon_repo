@@ -10,6 +10,7 @@ import MarathonDetails from "../Pages/Marathons/MarathonDetails";
 import RegisterMarathon from "../Pages/Marathons/RegisterMarathon";
 import MyApplyList from "../Pages/Dashboard/MyApplyList";
 import MyMarathons from "../Pages/Dashboard/MyMarathons";
+import ErrorPage from "../Pages/Error/ErrorPage";
 
 
 const router = createBrowserRouter([
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: "register-marathon/:id",
         Component: RegisterMarathon
+      },
+      { 
+        path: '*',
+        Component: ErrorPage
       },
     ]
   }
