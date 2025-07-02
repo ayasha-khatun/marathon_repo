@@ -38,7 +38,7 @@ const MarathonDetails = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800 rounded-xl shadow-xl">
+    <div className="max-w-5xl mx-auto p-6 pt-20 bg-gradient-to-br from-white to-blue-50 rounded-xl shadow-xl">
       <h2 className="text-3xl font-bold text-center text-blue-800 dark:text-blue-400 mb-6">{marathon.title}</h2>
 
       <div className="grid md:grid-cols-2 gap-8">

@@ -1,69 +1,81 @@
 import { createBrowserRouter } from "react-router";
 import Home from '../Pages/Home/Home';
-import RootLayouts from './../Layouts/RootLayouts';
+import RootLayouts from '../Layouts/RootLayouts';
 import Marathons from '../Pages/Marathons/Marathons';
 import DashboardLayouts from '../Layouts/DashboardLayouts';
-import Login from './../Pages/Auth/Login';
-import Register from './../Pages/Auth/Register';
+import Login from '../Pages/Auth/Login';
+import Register from '../Pages/Auth/Register';
 import AddMarathon from "../Pages/Dashboard/AddMarathon";
 import MarathonDetails from "../Pages/Marathons/MarathonDetails";
 import RegisterMarathon from "../Pages/Marathons/RegisterMarathon";
 import MyApplyList from "../Pages/Dashboard/MyApplyList";
 import MyMarathons from "../Pages/Dashboard/MyMarathons";
 import ErrorPage from "../Pages/Error/ErrorPage";
-
+import PrivateRoute from '../Contexts/PrivateRoutes/PrivateRoutes';
+import JwtRefreshHandler from "../Pages/Auth/JwtRefreshHandler";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: RootLayouts,
+    element: (
+      <JwtRefreshHandler>
+        <RootLayouts />
+      </JwtRefreshHandler>
+    ),
     children: [
       {
         index: true,
-        Component: Home
+        element: <Home />
       },
       {
         path: "/marathons",
-        Component: Marathons
+        element: <Marathons />
       },
       {
         path: "/marathon/:id",
-        Component: MarathonDetails
+        element: <MarathonDetails />
+      },
+      {
+        path: "register-marathon/:id",
+        element: (
+          <PrivateRoute>
+            <RegisterMarathon />
+          </PrivateRoute>
+        )
       },
       {
         path: "/dashboard",
-        Component: DashboardLayouts,
+        element: (
+          <PrivateRoute>
+            <DashboardLayouts />
+          </PrivateRoute>
+        ),
         children: [
           {
             path: "add-marathon",
-            Component: AddMarathon
+            element: <AddMarathon />
           },
           {
             path: "my-apply",
-            Component: MyApplyList
+            element: <MyApplyList />
           },
-          { 
-            path: 'my-marathons', 
-            Component: MyMarathons
+          {
+            path: 'my-marathons',
+            element: <MyMarathons />
           }
-          
         ]
       },
       {
         path: "/register",
-        Component: Register
+        element: <Register />
       },
       {
         path: "/login",
-        Component: Login
+        element: <Login />
       },
       {
-        path: "register-marathon/:id",
-        Component: RegisterMarathon
-      },
-      { 
-        path: '*',
-        Component: ErrorPage
+        path: "*",
+        element: <ErrorPage />
       },
     ]
   }
