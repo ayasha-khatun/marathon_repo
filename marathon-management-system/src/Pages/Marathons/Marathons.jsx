@@ -140,13 +140,12 @@ const Marathons = () => {
                     e.target.className = "w-full h-48 object-cover rounded-md mb-3 bg-gray-200";
                   }}
                 />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 rounded-b-md">
-                  <h3 className="text-xl font-bold text-white">{marathon.title}</h3>
-                </div>
+                
               </div>
               
               <div className="space-y-2 mt-2">
-                <p className="text-sm text-gray-600 flex items-center">
+                <h3 className="text-xl font-bold">{marathon.title}</h3>
+                <p className="text-sm flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -154,26 +153,9 @@ const Marathons = () => {
                   {marathon.location}
                 </p>
                 
-                <div className="border-t border-gray-100 pt-2">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Registration Dates</p>
                   <p className="text-sm">
                     {formatDate(marathon.registrationStart)} – {formatDate(marathon.registrationEnd)}
                   </p>
-                </div>
-                
-                <div className="border-t border-gray-100 pt-2">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Marathon Date</p>
-                  <p className="text-sm">
-                    {marathon.marathonStartDate ? formatDate(marathon.marathonStartDate) : 'TBA'}
-                  </p>
-                </div>
-                
-                <div className="border-t border-gray-100 pt-2">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Distance</p>
-                  <p className="text-sm font-medium">
-                    {marathon.distance || 'Not specified'}
-                  </p>
-                </div>
               </div>
               
               <Link

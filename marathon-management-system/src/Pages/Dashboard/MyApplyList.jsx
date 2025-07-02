@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useCallback } from 'react';
 import { AuthContext } from '../../Contexts/AuthContext/AuthContext';
 import Swal from 'sweetalert2';
 
@@ -7,8 +7,9 @@ const MyApplyList = () => {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const fetchMyRegistrations = async () => {
+  const fetchMyRegistrations = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -21,7 +22,14 @@ const MyApplyList = () => {
         throw new Error("Authentication token not found");
       }
 
-      const res = await fetch(`http://localhost:3000/registrations?email=${user.email}`, {
+      // Construct URL with search parameters
+      const url = new URL(`http://localhost:3000/registrations`);
+      url.searchParams.append('email', user.email);
+      if (searchQuery.trim()) {
+        url.searchParams.append('title', searchQuery.trim());
+      }
+
+      const res = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -65,13 +73,13 @@ const MyApplyList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.email, searchQuery]);
 
   useEffect(() => {
     if (user?.email) {
       fetchMyRegistrations();
     }
-  }, [user?.email]);
+  }, [user?.email, fetchMyRegistrations]);
 
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
@@ -127,7 +135,11 @@ const MyApplyList = () => {
     }
   };
 
-  if (loading) {
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  if (loading && registrations.length === 0) {
     return (
       <div className="text-center py-20">
         <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
@@ -155,21 +167,62 @@ const MyApplyList = () => {
 
   return (
     <div className="p-4 max-w-7xl mx-auto">
-      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
-        📋 My Applied Marathons
-      </h2>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-center md:text-left">
+          📋 My Applied Marathons
+        </h2>
+        
+        <div className="w-full md:w-80">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search by title..."
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
+              value={searchQuery}
+              onChange={handleSearch}
+            />
+            {searchQuery && (
+              <button 
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                onClick={() => setSearchQuery('')}
+              >
+                ✕
+              </button>
+            )}
+            {loading && registrations.length > 0 && (
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-blue-500"></div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
       {registrations.length === 0 ? (
         <div className="text-center py-10">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-8 max-w-md mx-auto">
-            <h3 className="text-xl font-bold text-blue-700 mb-3">No Marathon Registrations</h3>
-            <p className="mb-4">You haven't registered for any marathons yet. Find exciting races to participate in!</p>
+            <h3 className="text-xl font-bold text-blue-700 mb-3">
+              {searchQuery ? "No Matching Registrations" : "No Marathon Registrations"}
+            </h3>
+            <p className="mb-4">
+              {searchQuery 
+                ? `No registrations found for "${searchQuery}"`
+                : "You haven't registered for any marathons yet. Find exciting races to participate in!"}
+            </p>
             <button 
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               onClick={() => window.location.href = '/marathons'}
             >
               Browse Marathons
             </button>
+            {searchQuery && (
+              <button 
+                className="ml-3 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                onClick={() => setSearchQuery('')}
+              >
+                Clear Search
+              </button>
+            )}
           </div>
         </div>
       ) : (
@@ -195,10 +248,11 @@ const MyApplyList = () => {
                   <td className="py-3 px-4">{r.info || 'N/A'}</td>
                   <td className="py-3 px-4 text-center">
                     <button
-                      className="btn btn-error btn-xs text-white px-3 py-1 rounded"
+                      className="btn btn-error btn-xs text-white px-3 py-1 rounded hover:bg-red-700 transition-colors"
                       onClick={() => handleDelete(r._id)}
+                      disabled={loading}
                     >
-                      Cancel Registration
+                      {loading ? 'Processing...' : 'Cancel Registration'}
                     </button>
                   </td>
                 </tr>
