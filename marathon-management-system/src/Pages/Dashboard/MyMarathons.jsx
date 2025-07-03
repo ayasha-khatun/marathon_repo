@@ -143,6 +143,7 @@ const MyMarathons = () => {
       }
 
       const updated = {
+        image: form.image.value || editData.image,
         title: form.title.value || editData.title,
         location: form.location.value || editData.location,
         registrationStart: form.startDate.value || editData.registrationStart,
@@ -293,6 +294,17 @@ const MyMarathons = () => {
                   type="text" 
                   name="title" 
                   defaultValue={editData.title} 
+                  className="input input-bordered w-full"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Image</label>
+                <input 
+                  type="text" 
+                  name="image" 
+                  defaultValue={editData.image} 
                   className="input input-bordered w-full"
                   required
                 />

@@ -79,34 +79,6 @@ const MarathonCards = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="text-center py-20">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-xl mx-auto">
-          <h3 className="text-xl font-bold text-red-700 mb-3">⚠️ Error Loading Marathons</h3>
-          <p className="text-red-600 mb-4">{error}</p>
-          <div className="flex justify-center gap-3">
-            <button 
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-            >
-              Reload Page
-            </button>
-            <button 
-              onClick={() => setError(null)}
-              className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
-            >
-              Try Again
-            </button>
-          </div>
-          <p className="mt-4 text-sm text-gray-600">
-            If the problem persists, contact support at support@marathonexample.com
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   if (!marathons.length) {
     return (
       <div className="text-center py-20">
@@ -145,11 +117,9 @@ const MarathonCards = () => {
                     e.target.classList.add('bg-gray-100');
                   }}
                 />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                  <h3 className="text-xl font-bold text-white">{marathon.title}</h3>
-                </div>
               </figure>
               <div className="card-body p-5">
+                  <h3 className="text-xl font-bold">{marathon.title}</h3>
                 <div className="flex items-center mb-2">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />

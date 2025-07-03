@@ -12,7 +12,9 @@ const Home = () => {
 
     return (
         <div className='max-w-7xl'>
-            <Banner></Banner>
+             <div className="w-full min-h-screen flex items-center justify-center">
+                <Banner />
+            </div>
             <MarathonCards></MarathonCards>
             <UpcomingMarathon marathonPromise={marathonPromise}></UpcomingMarathon>
             <TipsSection></TipsSection>

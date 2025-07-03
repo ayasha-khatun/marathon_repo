@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router';
 import { useContext, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
-import { AuthContext } from './../../Contexts/AuthContext/AuthContext';
+import { AuthContext } from '../../Contexts/AuthContext/AuthContext';
 
 const RegisterMarathon = () => {
   const { id } = useParams();
@@ -10,19 +10,29 @@ const RegisterMarathon = () => {
   const [marathon, setMarathon] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetch(`http://localhost:3000/marathons/${id}`)
-      .then(res => res.json())
-      .then(data => setMarathon(data))
-      .catch(err => {
-        Swal.fire('Error', 'Failed to load marathon details', 'error');
-      });
-  }, [id]);
+  const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  const token = localStorage.getItem('access-token');
 
-  // Protect route if user is not logged in
+  // Fetch marathon details
+  useEffect(() => {
+    fetch(`${API}/marathons/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setMarathon(data.data);
+        } else {
+          Swal.fire('Error', 'Marathon not found.', 'error');
+          navigate('/marathons');
+        }
+      })
+      .catch(() => {
+        Swal.fire('Error', 'Failed to fetch marathon data.', 'error');
+      });
+  }, [id, API, navigate]);
+
   if (loading) return <div className="text-center py-20">Loading...</div>;
   if (!user) return <div className="text-center py-20 text-red-500">Please login to register.</div>;
-  if (!marathon) return <div className="text-center py-20">Loading marathon data...</div>;
+  if (!marathon) return <div className="text-center py-20">Loading marathon details...</div>;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,23 +48,27 @@ const RegisterMarathon = () => {
       lastName: form.lastName.value,
       contact: form.contact.value,
       info: form.info.value,
-      registeredAt: new Date(),
     };
 
     try {
-      // Save registration
-      const res = await fetch('http://localhost:3000/registrations', {
+      const res = await fetch(`${API}/registrations`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
         body: JSON.stringify(registration),
       });
 
       const data = await res.json();
 
-      if (res.ok) {
-        // Increment totalRegistration
-        await fetch(`http://localhost:3000/marathons/${marathon._id}/increment`, {
+      if (res.ok && data.success) {
+        // Update registration count
+        await fetch(`${API}/marathons/${marathon._id}/increment`, {
           method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         });
 
         Swal.fire('✅ Success', 'You have successfully registered!', 'success');
@@ -63,6 +77,7 @@ const RegisterMarathon = () => {
         Swal.fire('❌ Error', data.message || 'Registration failed', 'error');
       }
     } catch (err) {
+      console.error(err);
       Swal.fire('Server Error', err.message, 'error');
     } finally {
       setIsSubmitting(false);
@@ -70,8 +85,8 @@ const RegisterMarathon = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white dark:bg-gray-800 rounded shadow">
-      <h2 className="text-2xl font-bold mb-4 text-center">🏁 Register for {marathon.title}</h2>
+    <div className="max-w-xl mx-auto p-6 bg-white dark:bg-gray-800 rounded shadow mt-8">
+      <h2 className="text-2xl font-bold mb-6 text-center">🏁 Register for {marathon.title}</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input type="email" value={user?.email || ''} readOnly className="input input-bordered w-full" />

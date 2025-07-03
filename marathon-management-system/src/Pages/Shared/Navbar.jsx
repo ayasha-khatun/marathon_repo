@@ -29,7 +29,7 @@ const Navbar = () => {
         {/* Logo & Title */}
         <Link to="/" className="flex items-center space-x-2">
           <img src={logo} alt="Logo" className="h-10 bg-red" />
-          <span className="text-xl font-bold text-gray-800 dark:text-white">MarathonPro</span>
+          <span className="text-xl font-bold text-yellow-600 dark:text-white">MarathonX</span>
         </Link>
 
         {/* Desktop Menu */}
@@ -52,7 +52,7 @@ const Navbar = () => {
           {!user && (
             <>
               <li>
-                <NavLink to="/login" className="btn btn-primary flex items-center gap-1 text-green-600">
+                <NavLink to="/login" className="btn btn-primary flex items-center gap-1 text-white">
                    Login
                 </NavLink>
               </li>

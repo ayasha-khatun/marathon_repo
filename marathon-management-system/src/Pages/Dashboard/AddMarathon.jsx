@@ -1,12 +1,14 @@
-import React, { useContext, useState } from 'react';
+import React, { use, useContext, useState } from 'react';
 import { AuthContext } from '../../Contexts/AuthContext/AuthContext';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router';
 
 const AddMarathon = () => {
   const { user } = useContext(AuthContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -89,7 +91,11 @@ const AddMarathon = () => {
           title: 'Success!',
           text: 'Marathon created successfully!',
           icon: 'success',
-          timer: 2000
+          timer: 2000,
+          willClose: () => {
+            // REDIRECT TO MY MARATHONS PAGE
+            navigate('/my-marathons'); 
+          }
         });
         
         // Reset form

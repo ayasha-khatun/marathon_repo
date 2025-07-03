@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
         {/* Logo and Description */}
         <div>
-          <h2 className="text-2xl font-bold text-yellow-400">MarathonX</h2>
+          <h2 className="text-2xl font-bold text-yellow-600">MarathonX</h2>
           <p className="text-sm mt-2">
             Empowering runners and organizers to connect, train, and achieve marathon goals together.
           </p>
