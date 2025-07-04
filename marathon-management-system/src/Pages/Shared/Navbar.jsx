@@ -1,34 +1,109 @@
-import { Link, NavLink } from "react-router"; 
-import { useContext, useState } from "react";
+import { Link, NavLink } from "react-router"; // Fixed import
+import { useContext, useState, useEffect } from "react";
 import { FiLogIn, FiLogOut, FiMenu, FiX } from "react-icons/fi";
 import { AuthContext } from './../../Contexts/AuthContext/AuthContext';
-import logo from '../../assets/logo.png'
+import logo from '../../assets/logo.png';
+import Swal from 'sweetalert2'; // Added for logout confirmation
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false); // Added for scroll effect
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
+  // Enhanced logout function with confirmation
+  const handleLogout = async () => {
+    const confirm = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to log out from your account?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, log out'
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        await logOut();
+        Swal.fire({
+          title: 'Logged Out!',
+          text: 'You have been successfully logged out',
+          icon: 'success',
+          timer: 1500
+        });
+      } catch (error) {
+        Swal.fire({
+          title: 'Error!',
+          text: error.message || 'Failed to log out',
+          icon: 'error'
+        });
+      }
+    }
+  };
+
   const navLinks = (
     <>
-      <li><NavLink to="/" className="hover:text-primary">Home</NavLink></li>
+      <li>
+        <NavLink 
+          to="/" 
+          className={({ isActive }) => 
+            `hover:text-primary ${isActive ? 'text-yellow-600 font-bold' : ''}`
+          }
+        >
+          Home
+        </NavLink>
+      </li>
       {user && (
         <>
-          <li><NavLink to="/marathons" className="hover:text-primary">Marathons</NavLink></li>
-
-          <li><NavLink to="/dashboard" className="hover:text-primary">Dashboard</NavLink></li>
+          <li>
+            <NavLink 
+              to="/marathons" 
+              className={({ isActive }) => 
+                `hover:text-primary ${isActive ? 'text-yellow-600 font-bold' : ''}`
+              }
+            >
+              Marathons
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to="/dashboard" 
+              className={({ isActive }) => 
+                `hover:text-primary ${isActive ? 'text-yellow-600 font-bold' : ''}`
+              }
+            >
+              Dashboard
+            </NavLink>
+          </li>
         </>
       )}
     </>
   );
 
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-md fixed w-full z-50">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <nav className={`bg-white dark:bg-gray-900 shadow-md fixed w-full z-50 transition-all duration-300 ${
+      scrolled ? 'py-2' : 'py-3'
+    }`}>
+      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
         {/* Logo & Title */}
         <Link to="/" className="flex items-center space-x-2">
-          <img src={logo} alt="Logo" className="h-10 bg-red" />
+          <img src={logo} alt="Logo" className="h-10" />
           <span className="text-xl font-bold text-yellow-600 dark:text-white">MarathonX</span>
         </Link>
 
@@ -37,12 +112,15 @@ const Navbar = () => {
           {navLinks}
 
           {user && (
-            <li className="relative group cursor-pointer">
-              <img
-                src={user.photoURL || "/default-avatar.png"}
-                alt="avatar"
-                className="w-9 h-9 rounded-full border-2 border-gray-300 dark:border-white"
-              />
+            <li className="relative group flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <img
+                  src={user.photoURL || "/default-avatar.png"}
+                  alt="avatar"
+                  className="w-9 h-9 rounded-full border-2 border-gray-300 dark:border-white"
+                />
+                
+              </div>
               <div className="absolute bottom-[-40px] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                 {user.email}
               </div>
@@ -66,7 +144,7 @@ const Navbar = () => {
 
           {user && (
             <li>
-              <button onClick={logOut} className="flex items-center gap-1 text-red-500">
+              <button onClick={handleLogout} className="flex btn btn-outline items-center gap-1 text-red-500">
                 <FiLogOut /> Logout
               </button>
             </li>
@@ -75,7 +153,10 @@ const Navbar = () => {
 
         {/* Mobile Menu Icon */}
         <div className="md:hidden">
-          <button onClick={toggleMenu} className="text-2xl text-gray-700 dark:text-white">
+          <button 
+            onClick={toggleMenu} 
+            className="text-2xl text-gray-700 dark:text-white"
+          >
             {isMenuOpen ? <FiX /> : <FiMenu />}
           </button>
         </div>
@@ -89,30 +170,31 @@ const Navbar = () => {
 
             {user ? (
               <>
-                <li>
-                  <button onClick={logOut} className="flex items-center gap-1 text-red-500">
+                <li className="pt-4 border-t mt-4">
+                  <button onClick={handleLogout} className="flex btn btn-ghost items-center gap-1 text-red-500 w-full">
                     <FiLogOut /> Logout
                   </button>
                 </li>
-                <li className="flex items-center gap-2">
+                <li className="flex items-center gap-2 pt-2">
                   <img
                     src={user.photoURL || "/default-avatar.png"}
                     alt="avatar"
                     className="w-9 h-9 rounded-full border"
-                    title={user.email}
                   />
-                  <span className="text-sm">{user.displayName || user.email}</span>
+                  <div>
+                    <p className="text-xs text-gray-500">{user.email}</p>
+                  </div>
                 </li>
               </>
             ) : (
               <>
                 <li>
-                  <NavLink to="/login" className="flex items-center gap-1 text-green-600">
-                   Login
+                  <NavLink to="/login" className="flex items-center justify-center gap-1 btn btn-primary text-white w-full">
+                    Login
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/register" className="flex items-center gap-1 text-blue-600">
+                  <NavLink to="/register" className="flex items-center justify-center gap-1 btn btn-outline text-blue-600 w-full">
                     Register
                   </NavLink>
                 </li>

@@ -19,7 +19,7 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   // Get API URL with fallback to default
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://marathon-server-omega.vercel.app';
 
   // JWT Token Request Function
   const requestJWT = useCallback(async (email) => {

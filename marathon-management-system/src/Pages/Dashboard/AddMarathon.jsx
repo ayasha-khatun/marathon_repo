@@ -75,7 +75,7 @@ const AddMarathon = () => {
     };
 
     try {
-      const res = await fetch('http://localhost:3000/marathons', {
+      const res = await fetch('https://marathon-server-omega.vercel.app/marathons', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -92,10 +92,7 @@ const AddMarathon = () => {
           text: 'Marathon created successfully!',
           icon: 'success',
           timer: 2000,
-          willClose: () => {
-            // REDIRECT TO MY MARATHONS PAGE
-            navigate('/my-marathons'); 
-          }
+          
         });
         
         // Reset form
@@ -231,6 +228,7 @@ const AddMarathon = () => {
         </div>
 
         <button 
+          onClick={() => navigate('/dashboard')}
           type="submit" 
           className="btn btn-primary w-full py-3 text-lg"
           disabled={isSubmitting}

@@ -10,7 +10,7 @@ const RegisterMarathon = () => {
   const [marathon, setMarathon] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  const API = import.meta.env.VITE_API_URL || 'https://marathon-server-omega.vercel.app';
   const token = localStorage.getItem('access-token');
 
   // Fetch marathon details

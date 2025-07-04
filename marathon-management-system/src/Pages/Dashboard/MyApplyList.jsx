@@ -23,7 +23,7 @@ const MyApplyList = () => {
       }
 
       // Construct URL with search parameters
-      const url = new URL(`http://localhost:3000/registrations`);
+      const url = new URL(`https://marathon-server-omega.vercel.app/registrations`);
       url.searchParams.append('email', user.email);
       if (searchQuery.trim()) {
         url.searchParams.append('title', searchQuery.trim());
@@ -99,7 +99,7 @@ const MyApplyList = () => {
           throw new Error("Authentication token not found");
         }
         
-        const res = await fetch(`http://localhost:3000/registrations/${id}`, {
+        const res = await fetch(`https://marathon-server-omega.vercel.app/registrations/${id}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` }
         });

@@ -9,7 +9,7 @@ const MarathonDetails = () => {
   const [marathon, setMarathon] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/marathons/${id}`)
+    fetch(`https://marathon-server-omega.vercel.app/marathons/${id}`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {

@@ -39,6 +39,7 @@ const Register = () => {
     const password = form.password.value;
 
     if (!validatePassword(password)) return;
+    
 
     try {
       // 1. Register in Firebase
@@ -92,7 +93,7 @@ const Register = () => {
             </button>
           </div>
 
-          <button type="submit" className="btn btn-primary w-full">Register</button>
+          <button onClick={() => navigate('/')} type="submit" className="btn btn-primary w-full">Register</button>
         </form>
 
         <p className="text-sm text-center">

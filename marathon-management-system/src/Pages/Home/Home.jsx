@@ -8,7 +8,7 @@ import MarathonCards from './MarathonCards';
 
 const Home = () => {
 
-    const marathonPromise = fetch('http://localhost:3000/upcomingMarathon').then(res => res.json())
+    const marathonPromise = fetch('https://marathon-server-omega.vercel.app/upcomingMarathon').then(res => res.json())
 
     return (
         <div className='max-w-7xl'>

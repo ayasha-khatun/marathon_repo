@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { AuthContext } from '../../Contexts/AuthContext/AuthContext';
+import { useNavigate } from 'react-router';
 
 const MyMarathons = () => {
   const { user } = useContext(AuthContext);
@@ -8,6 +9,7 @@ const MyMarathons = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editData, setEditData] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchMarathons();
@@ -26,11 +28,10 @@ const MyMarathons = () => {
         throw new Error("Authentication token not found");
       }
 
-      const res = await fetch(`http://localhost:3000/my-marathons?email=${user.email}`, {
+      const res = await fetch(`https://marathon-server-omega.vercel.app/my-marathons?email=${user.email}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      // Handle HTTP errors
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(
@@ -40,27 +41,41 @@ const MyMarathons = () => {
       
       const data = await res.json();
       
-      // Handle different API response formats
+      // Enhanced response handling
       let marathonsArray = [];
       
       if (Array.isArray(data)) {
         marathonsArray = data;
       } 
-      else if (data && Array.isArray(data.marathons)) {
-        marathonsArray = data.marathons;
-      } 
-      else if (data && Array.isArray(data.results)) {
-        marathonsArray = data.results;
-      } 
-      else if (data && Array.isArray(data.data)) {
-        marathonsArray = data.data;
-      }
-      else if (data && typeof data === 'object' && !Array.isArray(data)) {
-        // Handle single object response by wrapping in array
-        marathonsArray = [data];
+      else if (data && typeof data === 'object') {
+        // Check known properties
+        const knownKeys = ['marathons', 'results', 'data', 'items'];
+        const foundKey = knownKeys.find(key => 
+          data[key] && Array.isArray(data[key])
+        );
+        
+        if (foundKey) {
+          marathonsArray = data[foundKey];
+        } 
+        // Search for any array in response
+        else {
+          const arrayKey = Object.keys(data).find(key => 
+            Array.isArray(data[key])
+          );
+          
+          if (arrayKey) {
+            marathonsArray = data[arrayKey];
+          } 
+          // Handle single marathon object
+          else if (data._id) {
+            marathonsArray = [data];
+          } else {
+            throw new Error("API response doesn't contain marathon data");
+          }
+        }
       } 
       else {
-        throw new Error("API response is not in expected format");
+        throw new Error("Unexpected API response format");
       }
 
       setMarathons(marathonsArray);
@@ -91,7 +106,7 @@ const MyMarathons = () => {
           throw new Error("Authentication token not found");
         }
 
-        const res = await fetch(`http://localhost:3000/marathons/${id}`, {
+        const res = await fetch(`https://marathon-server-omega.vercel.app/marathons/${id}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -151,7 +166,7 @@ const MyMarathons = () => {
         distance: form.distance.value || editData.distance,
       };
 
-      const res = await fetch(`http://localhost:3000/marathons/${editData._id}`, {
+      const res = await fetch(`https://marathon-server-omega.vercel.app/marathons/${editData._id}`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
@@ -194,24 +209,6 @@ const MyMarathons = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="text-center py-20">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-xl mx-auto">
-          <h3 className="text-xl font-bold text-red-700 mb-3">⚠️ Error Loading Marathons</h3>
-          <p className="text-red-600 mb-4">{error}</p>
-          <div className="flex justify-center gap-3">
-            <button 
-              onClick={fetchMarathons}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-            >
-              Try Again
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="p-4 max-w-7xl mx-auto">
@@ -225,9 +222,8 @@ const MyMarathons = () => {
             <h3 className="text-xl font-bold text-blue-700 mb-3">No Marathons Created Yet</h3>
             <p className="mb-4">You haven't created any marathons. Start organizing your first marathon today!</p>
             <button 
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              onClick={() => window.location.href = '/add-marathon'}
-            >
+              onClick={() => navigate('/dashboard/add-marathon')} // Fixed navigation
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
               Create Your First Marathon
             </button>
           </div>
@@ -300,7 +296,7 @@ const MyMarathons = () => {
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-1">Image</label>
+                <label className="block text-sm font-medium mb-1">Image URL</label>
                 <input 
                   type="text" 
                   name="image" 

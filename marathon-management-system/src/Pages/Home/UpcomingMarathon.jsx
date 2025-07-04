@@ -8,7 +8,7 @@ const UpcomingMarathon = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const res = await fetch('http://localhost:3000/upcomingMarathon');
+        const res = await fetch('https://marathon-server-omega.vercel.app/upcomingMarathon');
         
         // 1. Check for HTTP errors
         if (!res.ok) {

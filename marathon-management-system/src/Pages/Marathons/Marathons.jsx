@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router'; // Fixed import
+import { Link } from 'react-router'; // ✅ Corrected import
 
 const Marathons = () => {
   const [marathons, setMarathons] = useState([]);
@@ -11,41 +11,16 @@ const Marathons = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`http://localhost:3000/marathons?sort=${sort}`);
-      
-      // Check for HTTP errors
+      const res = await fetch('https://marathon-server-omega.vercel.app/marathons?sort=newest');
+
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(
-          errorData.message || `HTTP error! Status: ${res.status}`
-        );
-      }
-      
-      const data = await res.json();
-      
-      // Handle different API response formats
-      let marathonsArray = [];
-      
-      if (Array.isArray(data)) {
-        marathonsArray = data;
-      } 
-      else if (data && Array.isArray(data.marathons)) {
-        marathonsArray = data.marathons;
-      } 
-      else if (data && Array.isArray(data.results)) {
-        marathonsArray = data.results;
-      } 
-      else if (data && Array.isArray(data.data)) {
-        marathonsArray = data.data;
-      }
-      else if (data && typeof data === 'object' && !Array.isArray(data)) {
-        // Handle single object response by wrapping in array
-        marathonsArray = [data];
-      } 
-      else {
-        throw new Error("API response is not in expected format");
+        throw new Error(errorData.message || `HTTP error! Status: ${res.status}`);
       }
 
+      const result = await res.json();
+
+      const marathonsArray = result.data || [];
       setMarathons(marathonsArray);
     } catch (err) {
       console.error('Error fetching marathons:', err);
@@ -59,7 +34,6 @@ const Marathons = () => {
     fetchMarathons();
   }, [sort]);
 
-  // Function to format dates in a more readable way
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -94,7 +68,7 @@ const Marathons = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <h2 className="text-3xl font-bold">🏁 Marathon Events</h2>
+        <h2 className="text-3xl font-bold">🏁 All Marathon Events</h2>
         <div className="flex items-center gap-3">
           <span className="text-gray-600">Sort by:</span>
           <select
@@ -140,7 +114,6 @@ const Marathons = () => {
                     e.target.className = "w-full h-48 object-cover rounded-md mb-3 bg-gray-200";
                   }}
                 />
-                
               </div>
               
               <div className="space-y-2 mt-2">
@@ -152,12 +125,11 @@ const Marathons = () => {
                   </svg>
                   {marathon.location}
                 </p>
-                
-                  <p className="text-sm">
-                    {formatDate(marathon.registrationStart)} – {formatDate(marathon.registrationEnd)}
-                  </p>
+                <p className="text-sm">
+                  {formatDate(marathon.registrationStart)} – {formatDate(marathon.registrationEnd)}
+                </p>
               </div>
-              
+
               <Link
                 to={`/marathon/${marathon._id}`}
                 className="btn btn-primary mt-4 w-full"

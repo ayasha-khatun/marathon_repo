@@ -9,8 +9,7 @@ const MarathonCards = () => {
   useEffect(() => {
     const fetchMarathons = async () => {
       try {
-        const response = await fetch('http://localhost:3000/marathons');
-        
+        const response = await fetch('https://marathon-server-omega.vercel.app/marathons?limit=6');        
         // Handle HTTP errors
         if (!response.ok) {
           const errorText = await response.text();

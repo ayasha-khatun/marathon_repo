@@ -60,7 +60,7 @@ const router = createBrowserRouter([
             element: <MyApplyList />
           },
           {
-            path: 'my-marathons',
+            index: 'my-marathons',
             element: <MyMarathons />
           }
         ]
