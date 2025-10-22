@@ -15,6 +15,7 @@ const DynamicTitle = () => {
     else if (path === '/register') title = 'Register | MarathonPro';
     else if (path === '/marathons') title = 'Marathons | MarathonPro';
     else if (path.includes('/dashboard')) title = 'Dashboard | MarathonPro';
+    else if (path.includes('/about')) title = 'About Us | MarathonPro';
     else if (path.includes('/marathon/')) title = 'Marathon Details | MarathonPro';
     else if (path.includes('/register-marathon/')) title = 'Register Marathon | MarathonPro';
     else title = 'Page Not Found | MarathonPro';

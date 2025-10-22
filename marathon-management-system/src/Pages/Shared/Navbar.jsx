@@ -4,11 +4,15 @@ import { FiLogIn, FiLogOut, FiMenu, FiX } from "react-icons/fi";
 import { AuthContext } from './../../Contexts/AuthContext/AuthContext';
 import logo from '../../assets/logo.png';
 import Swal from 'sweetalert2'; // Added for logout confirmation
+// import { LuSun } from "react-icons/lu";
+// import { LuMoon } from "react-icons/lu";
+import DarkMode from "../DarkMode/DarkMode";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false); // Added for scroll effect
+  const [scrolled, setScrolled] = useState(false); // Added for scroll 
+  // const [theme, setTheme] =useState('');
 
   // Handle scroll effect
   useEffect(() => {
@@ -69,6 +73,26 @@ const Navbar = () => {
           Home
         </NavLink>
       </li>
+      <li>
+        <NavLink 
+          to="/about" 
+          className={({ isActive }) => 
+            `hover:text-primary ${isActive ? 'text-yellow-600 font-bold' : ''}`
+          }
+        >
+          About Us
+        </NavLink>
+      </li>
+      <li>
+  <NavLink
+    to="/blog"
+    className={({ isActive }) =>
+      `hover:text-yellow-600 ${isActive ? "text-yellow-600 font-semibold" : ""}`
+    }
+  >
+    Blog
+  </NavLink>
+</li>
       {user && (
         <>
           <li>
@@ -97,7 +121,7 @@ const Navbar = () => {
   );
 
   return (
-    <nav className={`bg-white dark:bg-gray-900 shadow-md fixed w-full z-50 transition-all duration-300 ${
+    <nav className={` bg-white dark:bg-gray-900 shadow-md fixed w-full z-50 transition-all duration-300 ${
       scrolled ? 'py-2' : 'py-3'
     }`}>
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
@@ -110,6 +134,27 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <ul className="hidden md:flex items-center space-x-6 font-medium text-gray-700 dark:text-gray-200">
           {navLinks}
+          <DarkMode></DarkMode>
+
+          {/* <div className="bg-zinc-100 dark:bg-zinc-700 rounded-xl
+          ">
+            <button
+            className="p-2  dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+            onClick={ () =>{
+              setTheme("");
+            }}
+            title="Toggle Theme">
+            <LuSun />
+          </button>
+          <button
+            className="p-2  dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+            onClick={ () =>{
+              setTheme("dark");
+            }}
+            title="Toggle Theme">
+            <LuMoon />
+          </button>
+          </div> */}
 
           {user && (
             <li className="relative group flex items-center gap-4">
@@ -194,7 +239,7 @@ const Navbar = () => {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/register" className="flex items-center justify-center gap-1 btn btn-outline text-blue-600 w-full">
+                  <NavLink to="/register" className="flex items-center justify-center gap-1 btn btn-outline text-blue-500 w-full">
                     Register
                   </NavLink>
                 </li>
@@ -206,5 +251,4 @@ const Navbar = () => {
     </nav>
   );
 };
-
 export default Navbar;

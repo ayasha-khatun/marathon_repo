@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router';
 import { FiPlusCircle, FiList, FiHome, FiEdit } from 'react-icons/fi';
+import BackToTop from '../Pages/BackToTop/BackToTop';
 
 const DashboardLayouts = () => {
 
@@ -49,6 +50,7 @@ const DashboardLayouts = () => {
       <main className="col-span-1 md:col-span-4 bg-gray-50 dark:bg-gray-900 p-6">
         <Outlet />
       </main>
+      <BackToTop></BackToTop>
     </div>
   );
 };

@@ -31,7 +31,7 @@ const Banner = () => {
   }, [length]);
 
   return (
-    <div className="w-full h-[300px] md:h-[500px] overflow-hidden rounded">
+    <div className="w-full h-[300px] md:h-[500px] overflow-hidden rounded  dark:bg-gray-900">
       {slides.map((slide, index) => (
         <div
           key={index}

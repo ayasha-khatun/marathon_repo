@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router'; // ✅ Corrected import
+import { Link } from 'react-router';
 
 const Marathons = () => {
   const [marathons, setMarathons] = useState([]);
@@ -11,17 +11,14 @@ const Marathons = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('https://marathon-server-omega.vercel.app/marathons?sort=newest');
-
+      // Use dynamic sort value
+      const res = await fetch(`https://marathon-server-omega.vercel.app/marathons?sort=${sort}`);
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(errorData.message || `HTTP error! Status: ${res.status}`);
       }
-
       const result = await res.json();
-
-      const marathonsArray = result.data || [];
-      setMarathons(marathonsArray);
+      setMarathons(result.data || []);
     } catch (err) {
       console.error('Error fetching marathons:', err);
       setError(err.message || "Failed to load marathons");
@@ -32,7 +29,7 @@ const Marathons = () => {
 
   useEffect(() => {
     fetchMarathons();
-  }, [sort]);
+  }, [sort]); // ✅ refetch when sort changes
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
